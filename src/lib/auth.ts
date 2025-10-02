@@ -1,11 +1,12 @@
 import { useAuthStore } from "@/stores/auth.store";
 
 // Development mode admin token (same as in auth.store.ts)
-const DEV_ADMIN_TOKEN = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJvd25lckB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX09XTkVSIiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1NzkyMzQxMSwiZXhwIjoyMDczMjgzNDExfQ.vkSzvy8BVc0VMMXu4j2-KVdTM363--A8e6QnoKzUvsbKCyYF_yhitvfkDUpgMzWM";
+const DEV_ADMIN_TOKEN =
+  "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI1IiwiZW1haWwiOiJjdXN0b21lckB0ZXN0LmNvbSIsInJvbGUiOiJST0xFX0NVU1RPTUVSIiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc1ODg2NDc4MSwiZXhwIjoyMDc0MjI0NzgxfQ.WUH7e88fjaK3FtbtEc1SJZnTuFLEZqyXUzCFBOTarBbxyY9f9eO-1_2PTQ6btgpf";
 
 // Check if we're in development mode
 export function isDevMode(): boolean {
-  return process.env.NODE_ENV === 'development';
+  return process.env.NODE_ENV === "development";
 }
 
 // Get development token
