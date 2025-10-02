@@ -4,8 +4,8 @@ import { useState, use } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
-import { useFood } from "@/lib/hooks/useFood";
-import { usePhotosByFoodItem } from "@/lib/hooks/usePhoto";
+import { useFood } from "@/lib/hooks/customer/useFood";
+import { usePhotosByFoodItem } from "@/lib/hooks/customer/usePhoto";
 import { CustomButton } from "@/components/ui/custom-button";
 export default function Page({
   params,
@@ -191,7 +191,7 @@ export default function Page({
       {/* Fixed Bottom Button */}
       <div className="fixed bottom-0 left-0 right-0 bg-white">
         <div className="max-w-[430px] mx-auto pb-6 flex justify-center px-4">
-          <CustomButton>맛 평가하기기</CustomButton>
+          <CustomButton>맛 평가하기</CustomButton>
         </div>
       </div>
     </div>

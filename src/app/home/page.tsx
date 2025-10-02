@@ -5,14 +5,10 @@ import { Search, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
+import { useUser } from "@/lib/hooks/customer/useUser";
+import { useMyFeedbacks } from "@/lib/hooks/customer/useFeedback";
 
-// Mock 데이터
-const mockUserData = {
-  name: "맛평단1",
-  points: 6000,
-};
-
-const mockOngoingSurvey = true;
+// Mock 데이터 (가게 목록 - API 없음)
 
 // const mockFeaturedCampaign = {
 //   id: 1,
@@ -56,6 +52,18 @@ const mockStores = [
 
 export default function Page() {
   const router = useRouter();
+
+  // API 데이터 가져오기
+  const { data: userData } = useUser();
+  const { data: feedbacksData } = useMyFeedbacks();
+
+  // Mock 데이터와 API 데이터 병합
+  const mockUserData = {
+    name: userData?.name || "맛평단1",
+    points: 6000, // TODO: API에서 포인트 정보 제공 필요
+  };
+
+  const mockOngoingSurvey = false;
 
   const handleSettings = () => {
     router.push("/mypage");

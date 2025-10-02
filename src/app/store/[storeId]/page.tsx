@@ -4,18 +4,9 @@ import { use } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useStore } from "@/lib/hooks/customer/useStore";
 
-// Mock 데이터
-const mockStoreData = {
-  id: 2,
-  name: "타코다코다 홍대점",
-  availableMenus: 12,
-  reviewCount: 213,
-  image: "/kimchi.png",
-  menuCategories: ["맛평 가능한 메뉴"],
-  description: "홍대입구역 4번 출구 바로 앞에 위치한 타코 맛집 입니당",
-};
-
+// Mock 데이터 (메뉴 목록 - API 없음)
 const mockMenus = [
   {
     id: 1,
@@ -59,6 +50,23 @@ export default function StoreDetailPage({
   const resolvedParams = use(params);
   const router = useRouter();
 
+  // API 데이터 가져오기
+  const { data: storeData, isLoading } = useStore(
+    Number(resolvedParams.storeId)
+  );
+
+  // Mock 데이터와 API 데이터 병합
+  const mockStoreData = {
+    id: Number(resolvedParams.storeId),
+    name: storeData?.storeName || "타코다코다 홍대점",
+    availableMenus: mockMenus.length, // TODO: API에서 메뉴 개수 제공 필요
+    reviewCount: 213, // TODO: API에서 리뷰 개수 제공 필요
+    image: "/kimchi.png", // TODO: API에서 썸네일 제공 필요
+    menuCategories: ["맛평 가능한 메뉴"],
+    description:
+      storeData?.description || "홍대입구역 4번 출구 바로 앞에 위치한 타코 맛집 입니당",
+  };
+
   const handleBack = () => {
     router.push("/home");
   };
@@ -66,6 +74,15 @@ export default function StoreDetailPage({
   const handleMenuClick = (menuId: number) => {
     router.push(`/store/${resolvedParams.storeId}/menu/${menuId}`);
   };
+
+  // 로딩 처리
+  if (isLoading) {
+    return (
+      <div className="h-screen w-full mx-auto bg-white flex items-center justify-center">
+        <p className="text-gray-500">로딩중...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white w-full mx-auto">
