@@ -15,7 +15,7 @@ export interface PageResponse<T> {
   hasPrevious: boolean;
 }
 
-export interface Pageable {
+export interface Pageable extends Record<string, unknown> {
   page?: number;
   size?: number;
   sort?: string[];

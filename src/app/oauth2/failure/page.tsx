@@ -19,7 +19,7 @@ function OAuthFailureContent() {
   }, [error, errorDescription]);
 
   const handleRetry = () => {
-    router.push("/");
+    router.push("/login");
   };
 
   const handleSupport = () => {

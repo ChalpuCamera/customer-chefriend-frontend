@@ -66,7 +66,7 @@ export const useAuthStore = create<AuthState>()(
       // Initialize with development token if in dev mode
       const isDevelopment = process.env.NODE_ENV === "development";
 
-      // Set dev token in localStorage on initialization
+      // Set dev token in localStorage on initialization (client-side only)
       if (isDevelopment && typeof window !== "undefined") {
         const devState = getInitialState();
         const storageData = {
@@ -195,18 +195,29 @@ export const useAuthStore = create<AuthState>()(
     },
     {
       name: "auth-storage",
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() =>
+        typeof window !== "undefined"
+          ? localStorage
+          : {
+              getItem: () => null,
+              setItem: () => {},
+              removeItem: () => {},
+            }
+      ),
       partialize: (state) => ({
         token: state.token,
         refreshToken: state.refreshToken,
         user: state.user,
         isAuthenticated: state.isAuthenticated,
       }),
+      skipHydration: false,
     }
   )
 );
 
 // Selectors for common use cases
+// Note: For better performance and to avoid re-renders,
+// use direct selectors like: useAuthStore((state) => state.user)
 export const useAuth = () =>
   useAuthStore((state) => ({
     isAuthenticated: state.isAuthenticated,
@@ -222,4 +233,5 @@ export const useAuthActions = () =>
     checkAuth: state.checkAuth,
     refreshAccessToken: state.refreshAccessToken,
   }));
+
 export const useUserRole = () => useAuthStore((state) => state.user?.role);

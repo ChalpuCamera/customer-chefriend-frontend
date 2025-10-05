@@ -24,7 +24,7 @@ export function useAuth(options: UseAuthOptions = {}) {
       saveRedirectUrl(pathname);
 
       // Redirect to login
-      const loginPath = redirectTo || "/";
+      const loginPath = redirectTo || "/login";
       router.push(loginPath);
     }
   }, [

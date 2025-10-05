@@ -1,5 +1,5 @@
 export default function Page() {
   return (
-    <div>리워드 페이지</div>
+    <div>피드백 완료</div>
   )
 }

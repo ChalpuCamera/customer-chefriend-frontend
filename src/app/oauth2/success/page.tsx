@@ -10,7 +10,6 @@ import {
 } from "@/lib/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { storeApi } from "@/lib/api/owner/store";
 
 const LoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center p-5">
@@ -82,32 +81,13 @@ function OAuthSuccessContent() {
 
         toast.success("로그인 성공!");
 
-        // Check if user has any stores
-        try {
-          const storesResponse = await storeApi.getMyStores({
-            page: 0,
-            size: 10,
-          });
-          const hasStore = storesResponse.result.totalElements > 0;
-
-          // Check for redirect URL or determine destination based on store existence
-          const redirectUrl = getAndClearRedirectUrl();
-          if (redirectUrl) {
-            router.push(redirectUrl);
-          } else if (hasStore) {
-            router.push("/home");
-          } else {
-            router.push("/welcome");
-          }
-        } catch (storeError) {
-          console.error("Failed to check stores:", storeError);
-          const redirectUrl = getAndClearRedirectUrl();
-          router.push(redirectUrl || "/home");
-        }
+        // Redirect to home or saved URL
+        const redirectUrl = getAndClearRedirectUrl();
+        router.push(redirectUrl || "/home");
       } catch (error) {
         console.error("OAuth token exchange error:", error);
         toast.error("로그인 처리 중 오류가 발생했습니다.");
-        router.push("/");
+        router.push("/login");
       }
     };
 

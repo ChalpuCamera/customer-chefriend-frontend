@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useAuthStore } from "@/stores/auth.store";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -10,26 +10,17 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const pathname = usePathname();
-  const router = useRouter();
-  const { isAuthenticated, user, checkAuth } = useAuthStore();
+  const { isAuthenticated, checkAuth } = useAuthStore();
 
   useEffect(() => {
     // Check auth on mount and when pathname changes
     const verifyAuth = async () => {
-      const isValid = await checkAuth();
-
-      if (!isValid) {
-        // If not authenticated and trying to access protected route
-        if (pathname.includes("/home") || pathname.includes("/mypage")) {
-          router.push("/");
-        }
-      } else if (user) {
-        // User is authenticated - no role validation needed
-      }
+      await checkAuth();
+      // Route protection is now handled by (protected) layout
     };
 
     verifyAuth();
-  }, [pathname, checkAuth, router, user]);
+  }, [pathname, checkAuth]);
 
   // Set up token refresh interval
   useEffect(() => {

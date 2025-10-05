@@ -1,5 +1,5 @@
 export default function Page() {
   return (
-    <div>인증</div>
+    <div>리워드 페이지</div>
   )
 }
