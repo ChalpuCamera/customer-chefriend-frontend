@@ -42,7 +42,7 @@ export default function LoginPage() {
           <div
             className="text-center text-body-r text-[#595959] cursor-pointer"
             onClick={() =>
-              window.open("https://app.chefriend.kr")
+              window.open("https://ceo.chefriend.kr")
             }
           >
             👨‍🌾 사장님으로 입장하기
