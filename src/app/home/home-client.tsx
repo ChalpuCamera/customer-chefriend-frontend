@@ -16,6 +16,8 @@ export function HomeClient({ initialStores }: HomeClientProps) {
   const router = useRouter();
   const [userName, setUserName] = useState("맛평단1");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredStores, setFilteredStores] = useState(initialStores);
 
   // Hydration-safe user name loading
   useEffect(() => {
@@ -27,6 +29,20 @@ export function HomeClient({ initialStores }: HomeClientProps) {
       setIsLoggedIn(false);
     }
   }, []);
+
+  // Filter stores based on search query
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredStores(initialStores);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase().trim();
+    const filtered = initialStores.filter((store) =>
+      store.storeName.toLowerCase().includes(query)
+    );
+    setFilteredStores(filtered);
+  }, [searchQuery, initialStores]);
 
   const mockUserData = {
     name: userName,
@@ -64,12 +80,12 @@ export function HomeClient({ initialStores }: HomeClientProps) {
             <h1 className="text-gray-800 text-body-sb">
               반가워요, {mockUserData.name}님
             </h1>
-            <div className="flex items-center text-body-sb gap-1">
+            {/* <div className="flex items-center text-body-sb gap-1">
               <span className="text-gray-900">P</span>
               <span className="text-purple-600">
                 {mockUserData.points.toLocaleString()}
               </span>
-            </div>
+            </div> */}
           </div>
         ) : (
           <div className="flex items-center justify-between">
@@ -92,8 +108,10 @@ export function HomeClient({ initialStores }: HomeClientProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
           <Input
             type="text"
-            placeholder="메뉴, 가게 이름 검색"
+            placeholder="가게 이름 검색"
             className="w-full pl-10 pr-4 py-3 border border-gray-500 rounded-xl h-11"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
       </div>
@@ -134,14 +152,21 @@ export function HomeClient({ initialStores }: HomeClientProps) {
       <div>
         <div className="px-4 pb-3">
           <div className="flex items-center gap-2">
-            <h2 className="text-gray-800 text-headline-b">{initialStores[0]?.address || ""} 맛평 리스트</h2>
-            <span className="text-purple-700 text-body-sb">{500}P 지급</span>
+            <h2 className="text-gray-800 text-headline-b">맛평 리스트</h2>
+            {/* <span className="text-purple-700 text-body-sb">{500}P 지급</span> */}
           </div>
         </div>
 
         {/* Store Items */}
         <div className="space-y-0">
-          {initialStores.map((store) => (
+          {filteredStores.length === 0 ? (
+            <div className="p-8 text-center">
+              <p className="text-gray-500 text-body-r">
+                검색 결과가 없습니다
+              </p>
+            </div>
+          ) : (
+            filteredStores.map((store) => (
             <div
               key={store.storeId}
               className="p-4 flex items-center justify-between h-26"
@@ -149,7 +174,7 @@ export function HomeClient({ initialStores }: HomeClientProps) {
             >
               <div className="flex items-center gap-4">
                 <Image
-                  src="/kimchi.png"
+                  src={store.thumbnailUrl || "/store.png"}
                   alt={store.storeName}
                   width={72}
                   height={72}
@@ -159,19 +184,19 @@ export function HomeClient({ initialStores }: HomeClientProps) {
                   <h3 className="text-gray-800 text-headline-b">
                     {store.storeName}
                   </h3>
-                  <p className="text-gray-700 text-sub-body-r mt-1">
+                  {/* <p className="text-gray-700 text-sub-body-r mt-1">
                     맛평 가능 메뉴 {0}개
-                  </p>
+                  </p> */}
                 </div>
               </div>
-              <div className="text-center flex flex-col gap-0.5">
+              {/* <div className="text-center flex flex-col gap-0.5">
                 <p className="text-purple-700 text-body-sb">
                   {0}
                 </p>
                 <p className="text-gray-800 text-sub-body-r">맛평수</p>
-              </div>
+              </div> */}
             </div>
-          ))}
+          )))}
         </div>
       </div>
 

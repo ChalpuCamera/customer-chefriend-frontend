@@ -45,7 +45,7 @@ export function MenuClient({ menuData, photos }: MenuClientProps) {
         <div className="w-full h-[220px]">
           {allImages.length > 0 ? (
             <Image
-              src={allImages[selectedImageIndex]?.url || "/kimchi.png"}
+              src={allImages[selectedImageIndex]?.url || "/store.png"}
               alt={menuData.foodName}
               width={375}
               height={220}
@@ -64,7 +64,7 @@ export function MenuClient({ menuData, photos }: MenuClientProps) {
             <div className="flex gap-1.5">
               {(allImages.length > 0
                 ? allImages
-                : [{ url: "/kimchi.png", id: "default" }]
+                : [{ url: "/store.png", id: "default" }]
               ).map((image, index) => (
                 <button
                   key={index}

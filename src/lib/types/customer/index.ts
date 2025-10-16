@@ -40,6 +40,7 @@ export interface StoreResponse {
   yogiyoLink?: string;
   coupangEatsLink?: string;
   description?: string;
+  thumbnailUrl?: string;
 }
 
 // 음식 정보

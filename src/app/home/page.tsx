@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage() {
   try {
     // 서버에서 데이터 fetch (SSR)
-    const storesResponse = await fetchAllStores({ page: 0, size: 20 });
+    const storesResponse = await fetchAllStores({ page: 0, size: 100 });
     const stores = storesResponse?.result?.content || [];
 
     // Debug: Log store IDs to verify data

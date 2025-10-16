@@ -93,6 +93,14 @@
           }
         ],
         "responses": {
+          "400": {
+            "description": "잘못된 요청 (이미 사용된 리워드, 만료된 리워드 등)",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseVoid" }
+              }
+            }
+          },
           "200": {
             "description": "리워드 사용 처리 성공",
             "content": {
@@ -102,14 +110,6 @@
                   "message": "성공했습니다",
                   "data": null
                 }
-              }
-            }
-          },
-          "400": {
-            "description": "잘못된 요청 (이미 사용된 리워드, 만료된 리워드 등)",
-            "content": {
-              "*/*": {
-                "schema": { "$ref": "#/components/schemas/ApiResponseVoid" }
               }
             }
           },
@@ -141,14 +141,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "리워드 교환 내역을 찾을 수 없습니다",
-            "content": {
-              "*/*": {
-                "schema": { "$ref": "#/components/schemas/ApiResponseVoid" }
-              }
-            }
-          },
           "200": {
             "description": "리워드 사용 취소 성공",
             "content": {
@@ -158,6 +150,14 @@
                   "message": "성공했습니다",
                   "data": null
                 }
+              }
+            }
+          },
+          "404": {
+            "description": "리워드 교환 내역을 찾을 수 없습니다",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseVoid" }
               }
             }
           },
@@ -191,6 +191,28 @@
           "required": true
         },
         "responses": {
+          "200": {
+            "description": "리워드 교환 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RewardRedemptionResponse"
+                },
+                "example": {
+                  "success": true,
+                  "message": "성공했습니다",
+                  "data": {
+                    "id": 1,
+                    "rewardId": 1,
+                    "rewardTitle": "10% 할인",
+                    "status": "REDEEMED",
+                    "expiresAt": "2024-02-01T10:00:00",
+                    "redeemedAt": "2024-01-01T10:00:00"
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "description": "잘못된 요청 (피드백 수 부족, 이미 교환한 리워드 등)",
             "content": {
@@ -217,28 +239,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResponseRewardRedemptionResponse"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "리워드 교환 성공",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RewardRedemptionResponse"
-                },
-                "example": {
-                  "success": true,
-                  "message": "성공했습니다",
-                  "data": {
-                    "id": 1,
-                    "rewardId": 1,
-                    "rewardTitle": "10% 할인",
-                    "status": "REDEEMED",
-                    "expiresAt": "2024-02-01T10:00:00",
-                    "redeemedAt": "2024-01-01T10:00:00"
-                  }
                 }
               }
             }
@@ -358,26 +358,6 @@
           "required": true
         },
         "responses": {
-          "401": {
-            "description": "인증이 필요합니다",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseFeedbackPhotosPresignedUrlResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "잘못된 요청 데이터 (너무 많은 파일 또는 잘못된 파일 확장자)",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseFeedbackPhotosPresignedUrlResponse"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Presigned URL 생성 성공",
             "content": {
@@ -397,6 +377,26 @@
                       }
                     ]
                   }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "인증이 필요합니다",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseFeedbackPhotosPresignedUrlResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "잘못된 요청 데이터 (너무 많은 파일 또는 잘못된 파일 확장자)",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseFeedbackPhotosPresignedUrlResponse"
                 }
               }
             }
@@ -442,16 +442,6 @@
         "description": "현재 로그인한 고객의 모든 리워드 교환 내역을 조회합니다. 사용한 리워드, 만료된 리워드 등 모든 상태를 포함합니다.",
         "operationId": "getMyRedemptions",
         "responses": {
-          "401": {
-            "description": "인증이 필요합니다",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseListRewardRedemptionResponse"
-                }
-              }
-            }
-          },
           "200": {
             "description": "내 리워드 내역 조회 성공",
             "content": {
@@ -472,6 +462,16 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "인증이 필요합니다",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListRewardRedemptionResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -483,6 +483,16 @@
         "description": "현재 로그인한 고객이 교환했지만 아직 사용하지 않은 리워드를 조회합니다. 만료된 리워드는 제외됩니다.",
         "operationId": "getMyActiveRedemptions",
         "responses": {
+          "401": {
+            "description": "인증이 필요합니다",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListRewardRedemptionResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "사용 가능한 리워드 조회 성공",
             "content": {
@@ -503,16 +513,6 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "인증이 필요합니다",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseListRewardRedemptionResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -524,6 +524,16 @@
         "description": "현재 로그인한 고객의 피드백 수에 따라 받을 수 있는 리워드 목록을 조회합니다. 피드백 수가 부족한 리워드는 제외됩니다.",
         "operationId": "getMyAvailableRewards",
         "responses": {
+          "401": {
+            "description": "인증이 필요합니다",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListRewardResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "내 리워드 목록 조회 성공",
             "content": {
@@ -540,16 +550,6 @@
                       "canRedeem": true
                     }
                   ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "인증이 필요합니다",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseListRewardResponse"
                 }
               }
             }
@@ -602,6 +602,16 @@
           }
         ],
         "responses": {
+          "401": {
+            "description": "인증이 필요합니다",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponsePageResponseCustomerFeedbackResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "내 피드백 목록 조회 성공",
             "content": {
@@ -629,16 +639,6 @@
                     "hasNext": true,
                     "hasPrevious": false
                   }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "인증이 필요합니다",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponsePageResponseCustomerFeedbackResponse"
                 }
               }
             }

@@ -37,7 +37,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
       <div className="p-4 flex items-center justify-between h-26 mb-4">
         <div className="flex items-center gap-4">
           <Image
-            src="/kimchi.png"
+            src={storeData.thumbnailUrl || "/store.png"}
             alt={storeData.storeName}
             width={72}
             height={72}
@@ -48,16 +48,16 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
               {storeData.storeName}
             </h3>
             <p className="text-gray-700 text-sub-body-r mt-1">
-              맛평 가능 메뉴 {foodsData.length}개
+              메뉴 {foodsData.length}개
             </p>
           </div>
         </div>
-        <div className="text-center flex flex-col gap-0.5">
+        {/* <div className="text-center flex flex-col gap-0.5">
           <p className="text-purple-700 text-body-sb">
             {0}
           </p>
           <p className="text-gray-800 text-sub-body-r">맛평수</p>
-        </div>
+        </div> */}
       </div>
       <div className="px-4 mb-6">
           <div className="bg-gray-100 rounded-xl p-4">
@@ -71,7 +71,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
       {/* Menu Categories */}
       <div className="p-4">
         <div className="flex items-center gap-2">
-          <h2 className="text-gray-800 text-headline-b">맛평 가능한 메뉴</h2>
+          <h2 className="text-gray-800 text-headline-b">메뉴</h2>
           <span className="text-gray-600 text-sub-body-sb">
             {foodsData.length}개
           </span>
@@ -87,27 +87,27 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
             onClick={() => handleMenuClick(food.foodItemId)}
           >
             <Image
-              src={food.thumbnailUrl || "/kimchi.png"}
+              src={food.thumbnailUrl || "/store.png"}
               alt={food.foodName}
               width={98}
               height={98}
               className="rounded-sm object-coverw-24.5 h-24.5"
             />
-            <div className="flex-1">
+            <div className="flex-1 flex flex-col justify-between h-full">
               <h3 className="text-gray-800 text-headline-m">{food.foodName}</h3>
               <p className="text-gray-800 text-sub-body-r">
                 {food.price.toLocaleString()}원
               </p>
-              <p className="text-purple-700 text-body-sb">
+              {/* <p className="text-purple-700 text-body-sb">
                 {500}P 지급
-              </p>
+              </p> */}
             </div>
-            <div className="text-center flex flex-col gap-0.5">
+            {/* <div className="text-center flex flex-col gap-0.5">
               <p className="text-gray-800 text-body-sb">
                 {0}
               </p>
               <p className="text-gray-800 text-sub-body-r">맛평수</p>
-            </div>
+            </div> */}
           </div>
         ))}
       </div>
