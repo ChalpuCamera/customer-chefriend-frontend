@@ -3,6 +3,7 @@ import type {
   ApiResponse,
   PageResponse,
   CustomerFeedbackResponse,
+  FeedbackCreateRequest,
   Pageable,
 } from "@/lib/types/customer";
 
@@ -17,6 +18,14 @@ export const feedbackApi = {
     return apiClient.get<ApiResponse<PageResponse<CustomerFeedbackResponse>>>(
       "/api/customer-feedback/me",
       { params }
+    );
+  },
+
+  // 피드백 생성
+  createFeedback: (data: FeedbackCreateRequest) => {
+    return apiClient.post<ApiResponse<CustomerFeedbackResponse>>(
+      "/api/customer-feedback",
+      data
     );
   },
 };

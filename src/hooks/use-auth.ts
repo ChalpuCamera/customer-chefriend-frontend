@@ -17,6 +17,12 @@ export function useAuth(options: UseAuthOptions = {}) {
   const { isAuthenticated, user, isLoading } = useAuthStore();
 
   useEffect(() => {
+    // 개발 모드에서는 인증 체크 스킵
+    if (process.env.NODE_ENV === "development") {
+      console.log("🔓 [DEV MODE] Authentication check skipped");
+      return;
+    }
+
     if (isLoading) return;
 
     if (required && !isAuthenticated) {

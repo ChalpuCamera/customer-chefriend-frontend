@@ -1,12 +1,10 @@
-import { Survey } from "./survey";
-import { FinalStep } from "./finalStep";
+import { Suspense } from "react";
+import { FeedbackClient } from "./feedback-client";
 
 export default function Page() {
   return (
-    <>
-      <div>피드백</div>
-      <Survey />
-      <FinalStep />
-    </>
+    <Suspense fallback={<div>Loading...</div>}>
+      <FeedbackClient />
+    </Suspense>
   );
 }

@@ -102,3 +102,32 @@ export interface RewardRedemptionResponse {
   redeemedAt: string;
   usedAt?: string;
 }
+
+// 입맛 프로필
+export interface CustomerTasteDto {
+  spicyLevel: number; // 1: 덜 맵게, 2: 보통, 3: 더 맵게
+  mealAmount: number; // 1: 0.5인분, 2: 1인분, 3: 1.5인분
+  mealSpending: number; // 1: 만원 이하, 2: 만원~2만원, 3: 2만원 이상
+}
+
+// 설문 답변 요청
+export interface SurveyAnswerRequest {
+  questionId: number;
+  answerText?: string;
+  numericValue?: number;
+}
+
+// 피드백 생성 요청
+export interface FeedbackCreateRequest {
+  storeId: number;
+  foodItemId: number;
+  surveyAnswers: SurveyAnswerRequest[];
+  photoUrls: string[];
+}
+
+// Presigned URL 응답
+export interface PresignedUrlResponse {
+  presignedUrl: string;
+  imageUrl: string;
+  fileName: string;
+}
