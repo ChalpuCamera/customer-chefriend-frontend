@@ -92,14 +92,29 @@ export interface SurveyAnswerResponse {
 }
 
 // 리워드 정보
-export interface RewardRedemptionResponse {
-  id: number;
+export interface RewardResponse {
   rewardId: number;
-  rewardTitle: string;
-  status: string;
-  expiresAt?: string;
-  discountRate?: number;
+  rewardName: string;
+  requiredFeedbackCount: number;
+  description: string;
+  imageUrl?: string;
+  createdAt: string;
+}
+
+export interface RewardRedemptionResponse {
+  redemptionId: number;
+  customerId: number;
+  reward: {
+    rewardId: number;
+    rewardName: string;
+    requiredFeedbackCount: number;
+    description: string;
+    imageUrl?: string;
+  };
+  redemptionStatus: "PENDING" | "APPROVED" | "REJECTED";
   redeemedAt: string;
+  approvedAt?: string;
+  rejectedAt?: string;
   usedAt?: string;
 }
 
