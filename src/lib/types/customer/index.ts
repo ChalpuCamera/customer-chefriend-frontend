@@ -120,14 +120,21 @@ export interface SurveyAnswerRequest {
 // 피드백 생성 요청
 export interface FeedbackCreateRequest {
   storeId: number;
-  foodItemId: number;
+  foodId: number;
+  surveyId: number;
+  campaignId?: number;
   surveyAnswers: SurveyAnswerRequest[];
-  photoUrls: string[];
+  photoS3Keys: string[];
+}
+
+// 개별 사진 Presigned URL 정보
+export interface FeedbackPhotoUrlInfo {
+  originalFileName: string;
+  presignedUrl: string;
+  s3Key: string;
 }
 
 // Presigned URL 응답
 export interface PresignedUrlResponse {
-  presignedUrl: string;
-  imageUrl: string;
-  fileName: string;
+  photoUrls: FeedbackPhotoUrlInfo[];
 }

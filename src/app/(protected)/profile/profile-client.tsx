@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { CustomButton } from "@/components/ui/custom-button";
@@ -12,9 +12,10 @@ import Image from "next/image";
 
 interface ProfileClientProps {
   showBackButton?: boolean;
+  isEditMode?: boolean;
 }
 
-export function ProfileClient({ showBackButton = false }: ProfileClientProps) {
+export function ProfileClient({ showBackButton = false, isEditMode = false }: ProfileClientProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [spicyLevel, setSpicyLevel] = useState<string>("2");
@@ -76,15 +77,20 @@ export function ProfileClient({ showBackButton = false }: ProfileClientProps) {
         ) : (
           <div />
         )}
+        {isEditMode && (
+          <button onClick={() => router.push('/home')} className="p-2 -mr-2">
+            <X size={24} className="text-gray-800" />
+          </button>
+        )}
       </div>
 
       {/* Title */}
-      <div className="px-4 py-6">
-        <h1 className="text-gray-800 text-headline-m mb-2">
-          평소 식사 스타일을 알려주세요
+      <div className="bg-white px-4 py-6">
+        <h1 className={`text-gray-800 text-title-2 mb-2 ${isEditMode ? 'text-center' : 'text-left'}`}>
+          {isEditMode ? '그 동안 취향이 바뀌진 않았나요?' : '평소 식사 스타일을 알려주세요'}
         </h1>
-        <p className="text-gray-700 text-body-r">
-          평가할 때 참고용으로 사용돼요.
+        <p className={`text-gray-800 text-body-r ${isEditMode ? 'text-center' : 'text-left'}`}>
+          {isEditMode ? "똑같다면 '다음' 눌러주세요." : '평가할 때 참고용으로 사용돼요.'}
         </p>
       </div>
 
@@ -92,20 +98,18 @@ export function ProfileClient({ showBackButton = false }: ProfileClientProps) {
       <div className="flex-1 px-4 space-y-9">
         {/* 매운맛 섹션 */}
         <div>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-14 h-14 relative">
-              <Image
-                src="/spicy.png"
-                alt="매운맛"
-                width={56}
-                height={56}
-                className="object-contain"
-              />
-            </div>
-            <h3 className="text-gray-800 text-headline-b">
-              보통 어느 정도로 맵게 드시나요?
-            </h3>
+          <div className="w-14 h-14 relative mb-3">
+            <Image
+              src="/spicy.png"
+              alt="매운맛"
+              width={56}
+              height={56}
+              className="object-contain"
+            />
           </div>
+          <h3 className="text-gray-800 text-headline-b mb-6">
+            보통 어느 정도로 맵게 드시나요?
+          </h3>
           <RadioGroup value={spicyLevel} onValueChange={setSpicyLevel}>
             <div className="bg-white h-12 flex items-center justify-between px-4">
               <Label
@@ -151,20 +155,18 @@ export function ProfileClient({ showBackButton = false }: ProfileClientProps) {
 
         {/* 식사량 섹션 */}
         <div>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-14 h-14 relative">
-              <Image
-                src="/portion.png"
-                alt="식사량"
-                width={56}
-                height={56}
-                className="object-contain"
-              />
-            </div>
-            <h3 className="text-gray-800 text-headline-b">
-              평소 식사량이 어느정도 되시나요?
-            </h3>
+          <div className="w-14 h-14 relative mb-3">
+            <Image
+              src="/portion.png"
+              alt="식사량"
+              width={56}
+              height={56}
+              className="object-contain"
+            />
           </div>
+          <h3 className="text-gray-800 text-headline-b mb-6">
+            평소 식사량이 어느정도 되시나요?
+          </h3>
           <RadioGroup value={portionSize} onValueChange={setPortionSize}>
             <div className="bg-white h-12 flex items-center justify-between px-4">
               <Label
@@ -213,20 +215,18 @@ export function ProfileClient({ showBackButton = false }: ProfileClientProps) {
 
         {/* 가격대 섹션 */}
         <div>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-14 h-14 relative">
-              <Image
-                src="/price.png"
-                alt="가격대"
-                width={56}
-                height={56}
-                className="object-contain"
-              />
-            </div>
-            <h3 className="text-gray-800 text-headline-b">
-              평균 식사 비용을 어느정도 쓰시나요?
-            </h3>
+          <div className="w-14 h-14 relative mb-3">
+            <Image
+              src="/price.png"
+              alt="가격대"
+              width={56}
+              height={56}
+              className="object-contain"
+            />
           </div>
+          <h3 className="text-gray-800 text-headline-b mb-6">
+            평균 식사 비용을 어느정도 쓰시나요?
+          </h3>
           <RadioGroup value={priceRange} onValueChange={setPriceRange}>
             <div className="bg-white h-12 flex items-center justify-between px-4">
               <Label
@@ -274,7 +274,7 @@ export function ProfileClient({ showBackButton = false }: ProfileClientProps) {
       {/* Bottom Button */}
       <div className="px-4 pb-8 pt-6">
         <CustomButton onClick={handleSubmit} disabled={loading}>
-          {loading ? "저장 중..." : "확인"}
+          {loading ? "저장 중..." : (isEditMode ? "다음" : "확인")}
         </CustomButton>
       </div>
     </div>

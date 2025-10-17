@@ -30,6 +30,10 @@ export function MenuClient({ menuData, photos }: MenuClientProps) {
     router.back();
   };
 
+  const handleFeedback = () => {
+    router.push(`/feedback?storeId=${menuData.storeId}&foodItemId=${menuData.foodItemId}`);
+  };
+
   return (
     <div className="bg-white w-full mx-auto">
       {/* Header */}
@@ -178,7 +182,7 @@ export function MenuClient({ menuData, photos }: MenuClientProps) {
       {/* Fixed Bottom Button */}
       <div className="fixed bottom-0 left-0 right-0 bg-white">
         <div className="max-w-[430px] mx-auto pb-6 flex justify-center px-4">
-          <CustomButton>맛 평가하기</CustomButton>
+          <CustomButton onClick={handleFeedback}>맛 평가하기</CustomButton>
         </div>
       </div>
     </div>

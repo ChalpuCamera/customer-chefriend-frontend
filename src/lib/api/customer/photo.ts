@@ -4,6 +4,7 @@ import type {
   PageResponse,
   PhotoResponse,
   PresignedUrlResponse,
+  FeedbackPhotoUrlInfo,
   Pageable,
 } from "@/lib/types/customer";
 
@@ -21,17 +22,13 @@ export const photoApi = {
     );
   },
 
-  // Presigned URL 생성
-  getPresignedUrl: async (
-    fileName: string,
-    contentType: string
+  // Presigned URL 생성 (여러 파일)
+  getPresignedUrls: async (
+    fileNames: string[]
   ): Promise<PresignedUrlResponse> => {
     const response = await apiClient.post<ApiResponse<PresignedUrlResponse>>(
       "/api/customer-feedback/presigned-urls",
-      {
-        fileName,
-        contentType,
-      }
+      { fileNames }
     );
     return response.result;
   },
@@ -47,18 +44,35 @@ export const photoApi = {
     });
   },
 
-  // 전체 업로드 프로세스
+  // 단일 파일 업로드 프로세스 (s3Key 반환)
   uploadImage: async (file: File): Promise<string> => {
-    // 1. Presigned URL 요청
-    const { presignedUrl, imageUrl } = await photoApi.getPresignedUrl(
-      file.name,
-      file.type
-    );
+    // 1. Presigned URL 요청 (단일 파일도 배열로)
+    const { photoUrls } = await photoApi.getPresignedUrls([file.name]);
+    const photoInfo = photoUrls[0];
 
     // 2. S3에 업로드
-    await photoApi.uploadToS3(presignedUrl, file);
+    await photoApi.uploadToS3(photoInfo.presignedUrl, file);
 
-    // 3. 이미지 URL 반환
-    return imageUrl;
+    // 3. s3Key 반환 (photoUrls가 아님!)
+    return photoInfo.s3Key;
+  },
+
+  // 여러 파일 업로드 프로세스 (s3Key 배열 반환)
+  uploadImages: async (files: File[]): Promise<string[]> => {
+    if (files.length === 0) return [];
+
+    // 1. Presigned URL들 요청
+    const fileNames = files.map((f) => f.name);
+    const { photoUrls } = await photoApi.getPresignedUrls(fileNames);
+
+    // 2. 모든 파일을 S3에 업로드
+    await Promise.all(
+      photoUrls.map((photoInfo, index) =>
+        photoApi.uploadToS3(photoInfo.presignedUrl, files[index])
+      )
+    );
+
+    // 3. s3Key 배열 반환
+    return photoUrls.map((p) => p.s3Key);
   },
 };

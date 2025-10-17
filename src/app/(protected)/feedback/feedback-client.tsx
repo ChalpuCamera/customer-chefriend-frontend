@@ -22,7 +22,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import Image from "next/image";
 
 export function FeedbackClient() {
   const router = useRouter();
@@ -173,22 +172,19 @@ export function FeedbackClient() {
     try {
       setSubmitting(true);
 
-      // 1. 사진 파일들을 S3에 업로드
-      const uploadedPhotoUrls: string[] = [];
+      // 1. 사진 파일들을 S3에 업로드 (s3Key 수집)
+      let photoS3Keys: string[] = [];
       if (photoFiles && photoFiles.length > 0) {
         toast.info("사진 업로드 중...");
-        for (const file of photoFiles) {
-          try {
-            const uploadedUrl = await photoApi.uploadImage(file);
-            uploadedPhotoUrls.push(uploadedUrl);
-          } catch (uploadError) {
-            console.error("Photo upload failed:", uploadError);
-            toast.error("사진 업로드에 실패했습니다.");
-            return;
-          }
+        try {
+          photoS3Keys = await photoApi.uploadImages(photoFiles);
+          // 업로드된 s3Key들을 Store에 저장
+          setPhotos(photoS3Keys);
+        } catch (uploadError) {
+          console.error("Photo upload failed:", uploadError);
+          toast.error("사진 업로드에 실패했습니다.");
+          return;
         }
-        // 업로드된 URL들을 Store에 저장
-        setPhotos(uploadedPhotoUrls);
       }
 
       // 2. 답변 데이터 변환
@@ -227,9 +223,10 @@ export function FeedbackClient() {
       // 3. 피드백 제출
       await feedbackApi.createFeedback({
         storeId: savedStoreId,
-        foodItemId: savedFoodItemId,
+        foodId: savedFoodItemId,
+        surveyId: 1,
         surveyAnswers,
-        photoUrls: uploadedPhotoUrls,
+        photoS3Keys,
       });
 
       toast.success("피드백이 제출되었습니다!");
@@ -252,42 +249,33 @@ export function FeedbackClient() {
       // Step 4: 마지막 한마디
       return (
         <div>
-          {/* 메뉴 정보 카드 */}
-          <div className="bg-gray-100 rounded-xl p-4 mb-6">
-            <Image
-              src="/store.png"
-              alt="Menu"
-              width={335}
-              height={186}
-              className="w-full h-auto rounded-lg mb-3"
-            />
-            <h3 className="text-gray-800 text-headline-b mb-1">메뉴 설명</h3>
-            <p className="text-gray-700 text-body-r">메뉴 설명</p>
-          </div>
-
-          {/* 사장님께 한마디 */}
-          <div className="mb-6">
-            <h3 className="text-gray-800 text-headline-b mb-4">
+          {/* 질문 박스 */}
+          <div className="bg-white px-4 py-[18px]">
+            <h3 className="text-gray-800 text-headline-b text-center">
               사장님께 딱 한 가지 이야기할 수 있다면,
               <br />
               어떤 말을 해주고 싶나요?
             </h3>
-            <div className="relative">
+          </div>
+
+          {/* Textarea */}
+          <div className="relative mx-[22px] mt-4 mb-6">
+            <div className="bg-gray-200 rounded-xl h-[186px] p-4">
               <textarea
                 value={textFeedback}
                 onChange={(e) => setTextFeedback(e.target.value)}
                 placeholder="따뜻한 조언의 말 남기기"
-                className="w-full min-h-[120px] p-4 bg-gray-100 rounded-xl text-body-r resize-none border-none focus:outline-none focus:ring-2 focus:ring-purple-700"
+                className="w-full h-full bg-transparent text-body-r text-gray-700 resize-none border-none focus:outline-none placeholder:text-gray-600"
               />
-              <div className="absolute bottom-3 right-3 text-sub-body-r text-gray-600">
-                {textFeedback.length}/20
-              </div>
+            </div>
+            <div className="absolute bottom-7 right-7 text-body-r text-gray-700">
+              {textFeedback.length}/20
             </div>
           </div>
 
           {/* 만족도 */}
-          <div>
-            <h3 className="text-gray-800 text-headline-b mb-4">
+          <div className="mx-[2px]">
+            <h3 className="text-gray-800 text-headline-b text-center mb-4">
               🙋 오늘 식사 경험에 얼마나 만족하시나요?
             </h3>
             <SurveyRadio
