@@ -33,7 +33,7 @@ jobs:
             npm run build
             
             # PM2로 앱 시작
-            pm2 start npm --name chefriend -- run start -- -p 3001
+            pm2 start npm --name chefriend-customer -- run start -- -p 3001
             # PM2 상태 저장 (서버 재부팅 시 자동 실행)
             pm2 save
             # nginx 재시작
